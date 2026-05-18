@@ -103,13 +103,4 @@ Todos los programas en microPython
 
 ## Panorama de Conexiones de todos los elementos
 
-| GPIOs            | Pin proto | Elemento HW | Alimentación y Notas |
-| ---------------- | --------- | ----------- | -------------------- |
-| GPIO04  + GPIO05 | 6         |             |                      |
-|                  |           |             |                      |
-|                  |           |             |                      |
-|                  |           |             |                      |
-|                  |           |             |                      |
-|                  |           |             |                      |
-|                  |           |             |                      |
-|                  |           |             |                      |
+![](doc/2026-05-18-14-04-51-image.png)
