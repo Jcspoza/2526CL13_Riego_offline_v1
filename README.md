@@ -103,4 +103,12 @@ Todos los programas en microPython
 
 ## Panorama de Conexiones de todos los elementos
 
-![](doc/2026-05-18-14-04-51-image.png)
+[Pdf con las conexiones en detalle](doc/ConexionesRiego_v1_0.pdf)
+
+[Excel con las conexiones en detalle](doc/ConexionesRiego_v1_0.xlsx)
+
+![](doc/conexionesv1.png) 
+
+---
+
+## Punto de situación
