@@ -166,12 +166,48 @@ En nuestro caso, usaremos solo la salida digital y habrá que calibrar el potenc
 | ![](./doc/resistenciaAgua1.jpg) | ![](./doc/resistenciaAgua2.jpg) |
 | ------------------------------- | ------------------------------- |
 
-1er test : alimentación continua => OK
+1er test : alimentación continua => OK, pero muy sensible a como este calibrado
 
 [Rbhwt_YL38_69CP_1_1.py](Rbhwt_YL38_69CP_1_1.py)
 
-
-
-2do test alimentacion por GPIO NOK
+2do test alimentación por GPIO => OK pero esta en el limite
 
 [Rbhwt_YL38_69GP_1_1.py](Rbhwt_YL38_69CP_1_1.py)
+
+Quizá hay que plantearse otro tipo de sensor para el deposito como un interruptor flotador mecánico
+
+[ARDUINO NIVEL de AGUA. Muy ÚTIL y FÁCIL!!!! 👨🏽‍🌾💻👨‍🎓 - YouTube](https://www.youtube.com/watch?v=Q2scRTYeaD4)
+
+[✅ Cómo medir el nivel de agua de forma fácil, muy útil en proyectos - YouTube](https://youtu.be/MPmjqzpyd-s?si=2zpCeMHO7T1KjEgl)
+
+Sensor en aliexpres 
+
+https://es.aliexpress.com/item/1005006611006807.html?spm=a2g0o.order_list.order_list_main.5.21ef194dZKRWYO&tblci=GiAkTEfW-p2qKzCddKegd0fbpqNz46nX0zj1tz5ToRqMNCDA9m4oue-eivLt8dxjMJT3UA&gatewayAdapt=glo2esp
+
+
+
+## M#6i Todo el HW inicializar y chequeo de errores
+
+### 1ra versión de la inicialización
+
+Solo pueden detectarse errores en el 
+
+Display
+
+DHT22
+
+Tanque vacio
+
+
+
+Ver como hace estos chequeos el programa 6.0
+
+[R2526CL13_RiegoOffLBoot_6_0.py](R2526CL13_RiegoOffLBoot_6_0.py)
+
+
+
+### 2da versión mas robusta
+
+Vamos a hacer todo la configuración que no este sujeta a errores en un modulo a parte
+
+----- AQUI ---

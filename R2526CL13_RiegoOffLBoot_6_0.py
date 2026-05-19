@@ -52,8 +52,8 @@ AllHWready = False
 # 0.2 Almacena los datos de check de HW ( solo el hw que se puede chequear
 HWreadydict = {'display': False,
                'dht22' : False,
-               'Tank' : False,
-               'Soil_Sensor' : False}
+               'Tank' : False
+               }
 # ------ INICIO DE CHECKS --------
 # 1.1 Check del display
 # pone a parpadear el led interno con periodo de 1 segundo
@@ -121,16 +121,42 @@ except OSError as e:
     iledtim.init(period=250,mode=Timer.PERIODIC, callback=lambda t:iled.toggle())
 
 # 1.3 Check del Tanque
+sensorTank = Pin(22, Pin.IN)
+alimentaSensor = Pin(21, Pin.OUT)
+alimentaSensor.on()
 
-# 1.4 Check del sensor de Humedad
-# Solo se puede chequear que este dentroo del rango esperado
-
+sleep(2)
+if sensorTank.value() :
+    print("ERROR Tanque VACIO")
+    HWreadydict['Tank'] = False
+    display.fill_rect(0, SndLy, WIDTH, 8, 0)
+    display.text('Tank EMPTY', 0, SndLy, 1)
+    display.fill_rect(0, StatLy, WIDTH, 8, 0)
+    display.text('ERROR TANK', 0, StatLy, 1)
+    display.show()
+    iledtim.init(period=250,mode=Timer.PERIODIC, callback=lambda t:iled.toggle())
+    alimentaSensor.off()
+else:
+    print("OK Tanque LLENO")
+    HWreadydict['Tank'] = True
+    display.fill_rect(0, SndLy, WIDTH, 8, 0)
+    display.text('Tank OK', 0, SndLy, 1)
+    display.fill_rect(0, StatLy, WIDTH, 8, 0)
+    alimentaSensor.off()
+    
 # 1.5 final
-sleep(10)
-textobig = "HW Test End"
+AllHWready = HWreadydict['display'] and HWreadydict['dht22'] and HWreadydict['Tank']
+
+if AllHWready:
+    textobig = "HW Test OK"
+else:
+    textobig = "HW Test FAIL"
+
 display.fill_rect(0, TrdLy, WIDTH, WIDTH_VA, 0) # borra
 Writer.set_textpos(display, TrdLy, 0)  
 wri.printstring(textobig)
+display.fill_rect(0, StatLy, WIDTH, 8, 0)
+display.text('HW Test End', 0, StatLy, 1)
 display.show()
 
 iledtim.deinit()
