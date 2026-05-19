@@ -7,9 +7,9 @@
 
 from os import uname
 # Informative block - start
-p_keyOhw = "Sensor soil moisture L-38 & YL-69 , DO in GPIO22"
+p_keyOhw = "Sensor soil moisture L-38 & YL-69 , DO in GPIO22- GPIO powered"
 p_project = "Test HW basico DHT22"
-p_version = "1.0"
+p_version = "1.1"
 p_library = "None"
 print(f"uPython version: {uname()[3]} ")
 print(f"uC: {uname()[4]} - Key other HW: {p_keyOhw}")
@@ -19,14 +19,20 @@ print(f"Key Library: {p_library}")
 from machine import Pin
 from time import sleep
 
-sensorHum = Pin(22, Pin.IN)
+sensorTank = Pin(22, Pin.IN)
+alimentaSensor = Pin(21, Pin.OUT)
+alimentaSensor.on()
 
-while True:   
-    sleep(2) # maximun sampling rate in case of DHT22
-    if sensorHum.value() :
+while True:
+    alimentaSensor.on()
+    sleep(2)
+    if sensorTank.value() :
         print("Tanque VACIO")
     else:
         print("Tanque LLENO")
+        
+    alimentaSensor.off()
+    sleep(2)
         
         
     

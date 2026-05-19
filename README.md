@@ -30,7 +30,7 @@ En esta lección vamos a **montar todos los elementos del Proyecto de riego auto
 
 - Panorama de Conexiones de todos los elementos
 
-- Punto de partida M#5 F_2 de CL11
+- Punto de situación: partimos de  M#5 F_2 de CL11 => DHT22 + YL69 => M#6 todo HW inicialización
 
 - TO DO y Notas
   
@@ -111,4 +111,67 @@ Todos los programas en microPython
 
 ---
 
-## Punto de situación
+## Punto de situación y lista de pendientes
+
+Nos  **quedamos en el montaje M#5 en CL11 y en al CL12 vimos en motor bomba**, con lo que en total hemos testado el siguiente HW
+
+- Sensor humedad de suelo tipo Sparkfun, con alimentación por GPIO
+
+- Display SH1106 + libreria letra grande writer + Zonificar el área de display
+
+- Pulsadores con interrupciones x1
+
+- Motor bomba alimentado a 5 volt , consumo 428 mA, altura 118 cm
+
+- Uso de conectores jack 3.5 
+
+Y vimos a medias el DHT22 y el sensor de agua en tanque tipo YL39/YL69. Veamos la lista de pendientes ( de momento):
+
+1. DHT22 basic hw test
+
+2. Sensor tanque de agua YL38/YL69 con alimentación continua + con alimentación por GPIO
+
+3. Motor bomba + circuito transistor con PWM test control velocidad y potencia suficiente
+
+4. Rotary Encoder basic HW test => ver un ejemplo de programa con menu que pase con el RE
+
+5. M#6i Todo el HW inicializar y check de errores
+
+## DHT22 basic hw test
+
+El el tutorial de SF esta el DHT11 que es muy parecido, aunque algo peor en características: el DHT22 es mas preciso y debe leer se no mas rápido de 2 segundos. Por lo demas usa un protocolo de comunicación de 1 hilo con un pull-up recomendado de 4.7k
+
+Hay una **libreria incorporada a micropyhon desde hace tiempo**( cuidado hay tutoriales antiguo que indican que hay que cargar un programa especial : YA NO)
+
+Un buen tutorial es [Raspberry Pi Pico: DHT11/DHT22 Temperature and Humidity Sensor (MicroPython) | Random Nerd Tutorials](https://randomnerdtutorials.com/raspberry-pi-pico-dht11-dht22-micropython/)
+
+Nuestro programa básico de prueba HW
+
+[Rbhwt_DHT22_1_1.py](Rbhwt_DHT22_1_1.py)
+
+IMPORTANTE : se puede detectar fallo o no conexión de componente con una excepción => **a tener en cuentan en programa de Inicialización**
+
+## Sensor de tanque de agua YL38 / YL69
+
+Este es un sensor resistivo sensor esta compuesto de 2 piezas 
+
+YL38 : esta construido al rededor del LM383 un circuito comparador de voltajes
+
+YL69 : una sonda resistiva 
+
+Una explicación excelente se encuentra aqui https://medium.com/@chirag.parmar/know-your-sensor-yl38-soil-hygrometer-fceca860faac 
+
+En nuestro caso, usaremos solo la salida digital y habrá que calibrar el potenciómetro "azul" del YL38 con un destornillador pequeño, para que se adapte a la sonda que finalmente usemos: quizá 2 clavos de acero inoxidable etc La razón es que la resistencia del agua varia mucho dependiendo de la superficie de contacto
+
+| ![](./doc/resistenciaAgua1.jpg) | ![](./doc/resistenciaAgua2.jpg) |
+| ------------------------------- | ------------------------------- |
+
+1er test : alimentación continua => OK
+
+[Rbhwt_YL38_69CP_1_1.py](Rbhwt_YL38_69CP_1_1.py)
+
+
+
+2do test alimentacion por GPIO NOK
+
+[Rbhwt_YL38_69GP_1_1.py](Rbhwt_YL38_69CP_1_1.py)
