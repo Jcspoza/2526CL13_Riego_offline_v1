@@ -25,7 +25,7 @@ while (True):
     try:
         sleep (2) # maximun sampling rate in case of DHT22
         sensorDHT.measure() # order a measure
-        temp=sensorDHT.temperature () # simple copy of last measure Temp
+        temp=sensorDHT.temperature() # simple copy of last measure Temp
         hum=sensorDHT.humidity() # simple copy of last measure Humidity
         print (f"T={temp:02.2f} ºC, H={hum:02.2f} %")
     except OSError as e:

@@ -184,30 +184,44 @@ Sensor en aliexpres
 
 https://es.aliexpress.com/item/1005006611006807.html?spm=a2g0o.order_list.order_list_main.5.21ef194dZKRWYO&tblci=GiAkTEfW-p2qKzCddKegd0fbpqNz46nX0zj1tz5ToRqMNCDA9m4oue-eivLt8dxjMJT3UA&gatewayAdapt=glo2esp
 
+## M#6i Chequeo de errores al inicializar (parcial)
 
+**Solo pueden detectarse errores en:**
 
-## M#6i Todo el HW inicializar y chequeo de errores
+* el Display --> NO ESTA PRERSENTE 
 
-### 1ra versión de la inicialización
+* el sensor DHT22 -> NO ESTA PRESENTE
 
-Solo pueden detectarse errores en el 
+* y si el Tanque está vacío
 
-Display
-
-DHT22
-
-Tanque vacio
-
-
-
-Ver como hace estos chequeos el programa 6.0
+Veamos como este chequeo puede hacerse **como ejemplo **en el programa 6.0
 
 [R2526CL13_RiegoOffLBoot_6_0.py](R2526CL13_RiegoOffLBoot_6_0.py)
 
+**En el programa final SUPONDREMOS que todas las conexiones estan ok**
 
+## M#7i Inicialización completa
 
-### 2da versión mas robusta
+Vamos a hacer toda la configuración de elementos HW suponiendo que todas las conexiones y componentes estan OK.
 
-Vamos a hacer todo la configuración que no este sujeta a errores en un modulo a parte
+Lista de componentes que se inicializan
 
------ AQUI ---
+- 1.0 **Led interno** parpadeando a 1 seg -> indica inicialización corriendo
+- 1.1 Display **sh1106 + uso de fuentes grandes**
+  - Una vez inicializado el display y letra grande, se visualiza en el display el estado de la inicializacion
+- 1.2 los **3 pulsadores con rutina de interrupción** para manejo de tecla pulsada
+- 1.3 **Rotary encoder** se inicializa a 10 posiciones como en un circulo para un futuro menú
+- 1.4 Sensor Temperatura y humedad del aire **DHT22**
+  - Se muestra una lectura de temperatura y humedad
+- 1.5 Motor de la **bomba con PWM** 
+- 1.6 **Sensor de humedad de suelo** tipo sparkfun por ADC
+- 1.7 **Sensor de agua en en el Tanque**
+  - además se configura el GPIO que alimentara estos dos últimos sensores
+
+Se lee el sensor de aguan en el tanque y se informa.
+
+Se cierra la inicialización apagando el led interno y desactivando el timer de 1 seg
+
+[R2526CL13_RiegoOffLBoot_7_1.py](R2526CL13_RiegoOffLBoot_7_1.py)
+
+--- AQUI lo DEJE --

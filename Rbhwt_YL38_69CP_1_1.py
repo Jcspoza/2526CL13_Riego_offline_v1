@@ -22,7 +22,7 @@ from time import sleep
 sensorTank = Pin(22, Pin.IN)
 
 
-while True:   
+while True:
     sleep(2)
     if sensorTank.value() :
         print("Tanque VACIO")
