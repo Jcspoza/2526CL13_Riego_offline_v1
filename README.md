@@ -93,14 +93,14 @@ Seguramente 'writer.py' no estará.
 
 Todos los programas en microPython
 
-| Programa test                              | Elemento HW                | Libreria                                              | Notas                               |
-| ------------------------------------------ | -------------------------- | ----------------------------------------------------- | ----------------------------------- |
-| [Rbhwt_sh1106_1_0.py](Rbhwt_sh1106_1_0.py) | Display SH1106             | [sh1106.py](sh1106.py)                                |                                     |
-|                                            | Display + letra a eleccion | [writer.py](writer.py) [freesans20.py](freesans20.py) | hay que incluir una fuente de letra |
-| [Rbhwt_DHT22_1_1.py](Rbhwt_DHT22_1_1.py)   | DHT22                      | 'dht' incorporada en uPy                              |                                     |
-|                                            |                            |                                                       |                                     |
-|                                            |                            |                                                       |                                     |
-|                                            |                            |                                                       |                                     |
+| Programa test                                                | Elemento HW                    | Libreria                                              | Notas                                                                        |
+| ------------------------------------------------------------ | ------------------------------ | ----------------------------------------------------- | ---------------------------------------------------------------------------- |
+| [Rbhwt_sh1106_1_0.py](Rbhwt_sh1106_1_0.py)                   | Display SH1106                 | [sh1106.py](sh1106.py)                                |                                                                              |
+|                                                              | Display + letra a eleccion     | [writer.py](writer.py) [freesans20.py](freesans20.py) | hay que incluir una fuente de letra                                          |
+| [Rbhwt_DHT22_1_1.py](Rbhwt_DHT22_1_1.py)                     | DHT22                          | 'dht' incorporada en uPy                              |                                                                              |
+| [Rbhwt_motorPWMtranNPN_1_0.py](Rbhwt_motorPWMtranNPN_1_0.py) | motor + transistor NPN por PWM | no necesaria                                          | El circuito permite alimentación a 5 o mas volt / se deben compartir tierras |
+|                                                              |                                |                                                       |                                                                              |
+|                                                              |                                |                                                       |                                                                              |
 
 ### Tabla resumen de programas del Riego off line
 
