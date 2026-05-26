@@ -26,7 +26,9 @@ En esta lección vamos a **montar todos los elementos del Proyecto de riego auto
   
   - Librerías usadas
   
-  - Tabla resumen de programas
+  - Tabla resumen de Test HW básicos
+  
+  - Tabla resumen de programas del Riego off line
 
 - Panorama de Conexiones de todos los elementos
 
@@ -83,21 +85,36 @@ Seguramente 'writer.py' no estará.
 | [writer.py](writer.py)         | Permite el uso de varios tipos y tamaños de letra en displays b/n, como el ssd1306 y el SH1106 ( el nuestro) | [micropython-font-to-py/writer at master · peterhinch/micropython-font-to-py · GitHub](https://github.com/peterhinch/micropython-font-to-py/tree/master/writer) |
 | [freesans20.py](freesans20.py) | Letra alternativa a usar con writer                                                                          |                                                                                                                                                                 |
 | [inkfree20.py](inkfree20.py)   | Letra alternativa a usar con writer                                                                          |                                                                                                                                                                 |
-|                                | DHT22                                                                                                        | ](R2526CL11_ADC_pVgDisp_5F_2.py)                                                                                                                                |
+| DHT                            | DHT22                                                                                                        | Incorporada en uPython                                                                                                                                          |
 
-### Tabla resumen de programas
+### 
+
+### Tabla resumen de Test HW básicos
 
 Todos los programas en microPython
 
-| Programa                                                       | Montaje  | HW si Robotica y Notas                                                | Objetivo de Aprendizaje |
-| -------------------------------------------------------------- | -------- | --------------------------------------------------------------------- | ----------------------- |
-| [R2526CL11_ADC_pVgDisp_5F_2.py](R2526CL11_ADC_pVgDisp_5F_2.py) | CL11 M#5 | Elijo el control de flujo por ser mas simple, v2 con mejoras visuales |                         |
-|                                                                |          |                                                                       |                         |
-|                                                                |          |                                                                       |                         |
-|                                                                |          |                                                                       |                         |
-|                                                                |          |                                                                       |                         |
-|                                                                |          |                                                                       |                         |
-|                                                                |          |                                                                       |                         |
+| Programa test                              | Elemento HW                | Libreria                                              | Notas                               |
+| ------------------------------------------ | -------------------------- | ----------------------------------------------------- | ----------------------------------- |
+| [Rbhwt_sh1106_1_0.py](Rbhwt_sh1106_1_0.py) | Display SH1106             | [sh1106.py](sh1106.py)                                |                                     |
+|                                            | Display + letra a eleccion | [writer.py](writer.py) [freesans20.py](freesans20.py) | hay que incluir una fuente de letra |
+| [Rbhwt_DHT22_1_1.py](Rbhwt_DHT22_1_1.py)   | DHT22                      | 'dht' incorporada en uPy                              |                                     |
+|                                            |                            |                                                       |                                     |
+|                                            |                            |                                                       |                                     |
+|                                            |                            |                                                       |                                     |
+
+### Tabla resumen de programas del Riego off line
+
+Todos los programas en microPython
+
+| Programa                                                         | Montaje  | HW si Robotica y Notas                                                     | Objetivo de Aprendizaje                                                               |
+| ---------------------------------------------------------------- | -------- | -------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| [R2526CL11_ADC_pVgDisp_5F_2.py](R2526CL11_ADC_pVgDisp_5F_2.py)   | CL11 M#5 | Elijo el control de flujo por ser mas simple, v2 con mejoras visuales      |                                                                                       |
+| [R2526CL13_RiegoOffLBoot_6_0.py](R2526CL13_RiegoOffLBoot_6_0.py) | M#6      | Display sh106 + letrta grande / DHT22 / sensor tanque por humedad resitiva | Programa ejemplo de como manejar errores en HW. No lo usaremos , suponemos todo HW OK |
+| [R2526CL13_RiegoOffLBoot_7_1.py](R2526CL13_RiegoOffLBoot_7_1.py) | M#7      | Todos los elementos HW                                                     | Inicialización completa - NO pasa a menu                                              |
+|                                                                  |          |                                                                            |                                                                                       |
+|                                                                  |          |                                                                            |                                                                                       |
+|                                                                  |          |                                                                            |                                                                                       |
+|                                                                  |          |                                                                            |                                                                                       |
 
 ---
 
@@ -184,7 +201,7 @@ Sensor en aliexpres
 
 https://es.aliexpress.com/item/1005006611006807.html?spm=a2g0o.order_list.order_list_main.5.21ef194dZKRWYO&tblci=GiAkTEfW-p2qKzCddKegd0fbpqNz46nX0zj1tz5ToRqMNCDA9m4oue-eivLt8dxjMJT3UA&gatewayAdapt=glo2esp
 
-## M#6i Chequeo de errores al inicializar (parcial)
+## M#6boot Chequeo de errores al inicializar (parcial)
 
 **Solo pueden detectarse errores en:**
 
@@ -194,13 +211,41 @@ https://es.aliexpress.com/item/1005006611006807.html?spm=a2g0o.order_list.order_
 
 * y si el Tanque está vacío
 
-Veamos como este chequeo puede hacerse **como ejemplo **en el programa 6.0
+Veamos como este chequeo puede hacerse **como ejemplo**en el programa 6.0
 
 [R2526CL13_RiegoOffLBoot_6_0.py](R2526CL13_RiegoOffLBoot_6_0.py)
 
 **En el programa final SUPONDREMOS que todas las conexiones estan ok**
 
-## M#7i Inicialización completa
+## M#7boot Inicialización completa + Pequeños Cambios HW
+
+### M#7 Pequeños Cambios del HW: alimentación del motor
+
+De los dos rieles de alimentación del protoboard , hasta ahora hemos usado:
+
+* Derecho : 3,3 volt : salida 36 de la PICO ( todas versiones) 
+
+* Izquierdo 5,0 volt : salida 40 de la PICO ( todas versiones) = VBUS ( suponiendo alimentacion por USB o power bank)
+
+Esto provoca un poco de lio de cableado para le DHT22 en cuanto a alimentación, y en realidad el motor es el **único** elemento HW que necesita 5 volt => **usar también el riel izquierdo a 3,3 volt**
+
+==> Re-cableamos de acuerdo e esta cambio : 
+
+1. primero el riel a la salida 36 de la pico 8 cable por debajo de la PICIO)
+
+2. Punto M2 y al cátodo del diodo fly-back **salida 39 VSYS de la PICO**, donde debe haber unos 4,8 volt si se alimenta por USB o power bank, y +5,0 si lo alimentamos con 5.0 volt entrando en VSYS, que es el punto de entrada adecuado para alimentación externa
+
+![](./doc/powerSchemaPICO.png)
+
+Antes de seguir hay que asegurarse de que :
+
+1. El motor sigue funcionando OK ( uso un motor similar)
+
+2. El DHT que ha cambiado su alimentación funciona OK
+
+Para ello uso los programas básicos de Test HW : ver tabla arriba
+
+### M#7 Inicialización completa
 
 Vamos a hacer toda la configuración de elementos HW suponiendo que todas las conexiones y componentes estan OK.
 
@@ -224,4 +269,4 @@ Se cierra la inicialización apagando el led interno y desactivando el timer de 
 
 [R2526CL13_RiegoOffLBoot_7_1.py](R2526CL13_RiegoOffLBoot_7_1.py)
 
---- AQUI lo DEJE --
+--- AQUI lo DEJE -
