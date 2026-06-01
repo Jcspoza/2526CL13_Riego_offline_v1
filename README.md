@@ -124,7 +124,7 @@ Todos los programas en microPython
 
 [Excel con las conexiones en detalle](doc/ConexionesRiego_v1_0.xlsx)
 
-![](doc/conexionesv1.png) 
+![](doc/conexionesv2.png) 
 
 ---
 
@@ -245,7 +245,7 @@ Antes de seguir hay que asegurarse de que :
 
 Para ello uso los programas básicos de Test HW : ver tabla arriba
 
-### M#7 Inicialización completa
+### M#7 Inicialización completa - Tanque con sensor resistivo
 
 Vamos a hacer toda la configuración de elementos HW suponiendo que todas las conexiones y componentes estan OK.
 
@@ -269,4 +269,10 @@ Se cierra la inicialización apagando el led interno y desactivando el timer de 
 
 [R2526CL13_RiegoOffLBoot_7_1.py](R2526CL13_RiegoOffLBoot_7_1.py)
 
---- AQUI lo DEJE -
+### M#8 Inicialización completa - Tanque con sensor flotador
+
+El sensor de flotador es equivalente a un pulsador SIN REBOTE, asi aque lo unico que hay que añadir es una resistencia de pull-up de 10K. Usaremos el GPIO01 porque al lado hay un pin a GND
+
+[R2526CL13_RiegoOffLBoot_8_1.py](R2526CL13_RiegoOffLBoot_8_1.py)
+
+---- AQUI ME QUEDE ---

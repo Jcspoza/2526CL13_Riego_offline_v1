@@ -8,6 +8,7 @@
 # Licencia : CC BY-NC-SA 4.0
 # REf basica https://docs.sunfounder.com/projects/pico-2w-kit/en/latest/pyproject/py_water.html
 # Montaje #7 : todo el HW INICIALIZADO incluido motor PWM
+# Montaje #8 : detector del tanque vacio por flotador en GPIO01
 
 from machine import Pin, ADC, I2C, Timer,PWM
 from dht import DHT22
@@ -22,8 +23,8 @@ from os import uname
 # Informative block - start
 p_ucontroler = "Pico W & Pico _"
 p_keyOhw = "External pot. on ADC0 - pata + a GPIO21 + displ SH1106 gpio4&5"
-p_project = "Riego Autgomatico Inicializacion COMPLETA - Off Line "
-p_version = "7.1"
+p_project = "Riego Autgomatico (flotador) Inicializacion COMPLETA - Off Line "
+p_version = "8.1"
 p_library = "SH1106  @robert-hh + writer @peterhinch + dht"
 print(f"uPython version: {uname()[3]} ")
 print(f"uC: {uname()[4]} - Key other HW: {p_keyOhw}")
@@ -81,7 +82,8 @@ TRB = 17
 SENSDHT = 14
 
 # Sensor Tank
-SENSTPIN = 22
+# SENSTPIN = 22 # sensor resistivo del tanque
+TANKPIN = 1
 
 # GPIO para alimentar sensores Tank y humedad suelo
 POWERSENS = 21
@@ -184,17 +186,18 @@ motorpor100 = 50 # fijamos inicialmente a 50% del regimen del motor cuando arran
 # pasamos a dutty cycle  de 0 a 65_000
 motorpor60mil = int(65535 * motorpor100 / 100)
 
-# 1.6 Sensor de humedad de suelo
+# 1.6 Sensor de humedad de suelo y GPIO que alimenta los sensores 
 sensorSoil = ADC(SOILMOISTADC)
-
-# 1.7 Crea el sensor del tanque y GPIO que alimenta los sensores 
-sensorTank = Pin(SENSTPIN, Pin.IN)
 alimentaSensor = Pin(POWERSENS, Pin.OUT)
+
+# 1.7 Crea el sensor del tanque 
+sensorTank = Pin(TANKPIN, Pin.IN)
 
 # lee valor del sensor del Tanke y del suelo
 alimentaSensor.on()
 sleep(2)
-lastsensorTank = sensorTank.value()
+lastsensorTank = not sensorTank.value() # sensor flotador logica '1' : lleno
+# float sensor logic '1' = tank FULL
 
 lastsensorSoilraw = sensorSoil.read_u16()
 alimentaSensor.off()

@@ -8,6 +8,8 @@
 # Licencia : CC BY-NC-SA 4.0
 # REf basica https://docs.sunfounder.com/projects/pico-2w-kit/en/latest/pyproject/py_water.html
 # Montaje #7 : todo el HW INICIALIZADO incluido motor PWM
+# 7.1 -> 7.2 tanque a texto grueso + status salir / seguir
+# Montaje #8 : detector del tanque vacio por flotador en GPIO01
 
 from machine import Pin, ADC, I2C, Timer,PWM
 from dht import DHT22
@@ -21,9 +23,9 @@ from rotary_irq_rp2 import RotaryIRQ
 from os import uname
 # Informative block - start
 p_ucontroler = "Pico W & Pico _"
-p_keyOhw = "External pot. on ADC0 - pata + a GPIO21 + displ SH1106 gpio4&5"
-p_project = "Riego Autgomatico Inicializacion COMPLETA - Off Line "
-p_version = "7.1"
+p_keyOhw = "Soils sesnsor on ADC0 - pata + a GPIO21 + displ SH1106 gpio4&5"
+p_project = "Riego Automatico (flotador) Inicializacion y Main - Off Line "
+p_version = "8.2"
 p_library = "SH1106  @robert-hh + writer @peterhinch + dht"
 print(f"uPython version: {uname()[3]} ")
 print(f"uC: {uname()[4]} - Key other HW: {p_keyOhw}")
@@ -42,7 +44,7 @@ TopLhy = 9
 FstLy = 11
 SndLy = 21
 TrdLy = 31 
-FrdLy = 41 # not used if 2rd use a big letter x20
+FrdLy = 41
 StatLhy = 54
 StatLy = 56
 WIDTH_VA = 21
@@ -63,7 +65,7 @@ def manejaPulsadores(pin):
     global teclas, last_time
     new_time = ticks_ms()
     # Si ha pasado mas de 200ms desde el ultimo evento, temenos un nuevo evento. Evita los REBOTES
-    if time.ticks_diff(new_time, last_time) > 400: 
+    if ticks_diff(new_time, last_time) > 400: 
         teclas.append(listaPul[int(str(pin).split(",")[0][8:]) - CONFIRM])
         # Si la interrupcion vien del pulsador 'back' en GPIO19
         # objeto 'pin' devuelve por ejemplo 'Pin(GPIO19, mode=IN)' si lo pasamos a str
@@ -81,7 +83,8 @@ TRB = 17
 SENSDHT = 14
 
 # Sensor Tank
-SENSTPIN = 22
+# SENSTPIN = 22 # sensor resistivo del tanque
+TANKPIN = 1
 
 # GPIO para alimentar sensores Tank y humedad suelo
 POWERSENS = 21
@@ -96,8 +99,44 @@ SOILVOLTCONV = MAXVOLT / (65535)
 # Motor bomba pin
 MOTORPIN = 15
 
+# Control de bucle principal
+NotExit = True
+
+
+
+# Definicion de menus Acciones
+
+def showAirTH():
+    return 'showAirTH'
+
+def showSoilVolt():
+    return 'showSoilVolt'
+
+def showSoilHum():
+    return 'showSoilHum'
+
+def checkTank():
+    return 'checkTank'
+
+def checkMotor():
+    return 'checkMotor'
+
+def doNothing():
+    return 'doNothing'
+
+MENU = [[showAirTH, 'Air ºC Hum'],
+        [showSoilVolt,'Soil Volts'],
+        [showSoilHum, 'Soil Hum'],
+        [checkTank, 'Check Tank'],
+        [checkMotor, 'Check Motor'],
+        [doNothing, 'Do nothing'],
+        [doNothing, 'Do nothing'],
+        [doNothing, 'Do nothing'],
+        [doNothing, 'Do nothing'],
+        [doNothing, 'Do nothing']]
+
 # ------ INICIALIZACIONES --------
-# 1.0 pone a parpadear el led interno con periodo de 1 segundo
+# pone a parpadear el led interno con periodo de 1 segundo
 iled = Pin("LED", Pin.OUT)
 iledtim = Timer(period=1000, mode=Timer.PERIODIC, callback=lambda t:iled.toggle())
 
@@ -149,7 +188,7 @@ re = RotaryIRQ(
     pin_num_clk=TRB,
     pin_num_dt=TRA,
     min_val=0,
-    max_val=9, # Rotary encoder 10 posiciones 
+    max_val=(len(MENU)-1), # Rotary encoder 10 posiciones 
     reverse=False,
     incr=1,
     range_mode=RotaryIRQ.RANGE_WRAP,
@@ -184,17 +223,18 @@ motorpor100 = 50 # fijamos inicialmente a 50% del regimen del motor cuando arran
 # pasamos a dutty cycle  de 0 a 65_000
 motorpor60mil = int(65535 * motorpor100 / 100)
 
-# 1.6 Sensor de humedad de suelo
+# 1.6 Sensor de humedad de suelo y GPIO que alimenta los sensores 
 sensorSoil = ADC(SOILMOISTADC)
-
-# 1.7 Crea el sensor del tanque y GPIO que alimenta los sensores 
-sensorTank = Pin(SENSTPIN, Pin.IN)
 alimentaSensor = Pin(POWERSENS, Pin.OUT)
 
-# lee valor del sensor del Tanke y del suelo
+# 1.7 Crea el sensor del tanque 
+sensorTank = Pin(TANKPIN, Pin.IN)
+
+# lee valor del sensor del Tanque y del suelo
 alimentaSensor.on()
 sleep(2)
-lastsensorTank = sensorTank.value()
+lastsensorTank = not sensorTank.value() # sensor flotador logica '1' : lleno
+# float sensor logic '1' = tank FULL
 
 lastsensorSoilraw = sensorSoil.read_u16()
 alimentaSensor.off()
@@ -206,29 +246,77 @@ display.text('motor/Soil/Tank', 0, SndLy, 1)
 display.show()
 
 if lastsensorTank :
-    print("AVISO: Tanque VACIO")
-    display.fill_rect(0, StatLy, WIDTH, 8, 0)
-    display.text('Tank EMPTY', 0, StatLy, 1)   
+    print("AVISO: Tanque VACIO / Tank EMPTY")
+    display.fill_rect(0, TrdLy, WIDTH, WIDTH_VA, 0) # borra 3ra linea x21 alto
+    textobig = "Tank EMPTY"
+    Writer.set_textpos(display, TrdLy, 0)  
+    wri.printstring(textobig)
+    display.show()   
     
 else:
-    print("Tanque LLENO")
-    display.fill_rect(0, StatLy, WIDTH, 8, 0)
-    display.text('Tank NO empty', 0, StatLy, 1)
+    print("Tanque LLENO / Tank FULL")
+    display.fill_rect(0, TrdLy, WIDTH, WIDTH_VA, 0) # borra 3ra linea x21 alto
+    textobig = "Tank FULL"
+    Writer.set_textpos(display, TrdLy, 0)  
+    wri.printstring(textobig)
+    display.show() 
 
-display.fill_rect(0, TrdLy, WIDTH, WIDTH_VA, 0) # borra 3ra linea x21 alto
-textobig = "HW Init End"
-Writer.set_textpos(display, TrdLy, 0)  
-wri.printstring(textobig)
-display.show() 
-
-# Si inicializacion es Ok apaga el led interno
 iledtim.deinit()
 sleep(1)
 iled.off()
+# ------- Fin de incializacion --------
 
-# ------ FIN DE inicializacion --------
+display.fill_rect(0, StatLy, WIDTH, 8, 0)
+display.text('Exit BACK/go CON', 0, StatLy, 1)
+display.show() 
 
+while not('back' in teclas) and not('confirm' in teclas):
+    pass
 
- 
+if teclas != [] and teclas[0] == 'back':
+    NotExit = False
+    teclas = []
+    
+if teclas != [] and teclas[0] == 'confirm':
+    NotExit = True
+    teclas = []
+    
+# 2- FUNCIONES 
+    
+# 3- BUCLE PRINCIPAL --> Esta sin hacer 
+while NotExit:
+    option = re.value()
+    print('Menu option = ', option, end='\r')
+    # DrawMenuScreen(option)
+    display.fill_rect(0, StatLy, WIDTH, 8, 0)
+    display.text('Go CON/Stop BACK', 0, StatLy, 1)
+    display.show()
+    
+    if teclas != [] and teclas[0] == 'back':
+        NotExit = False
+        teclas = []
 
+    
+    if teclas != [] and teclas[0] == 'confirm':
+        teclas = []
+        print('Go Menu option = ', option)
+        # falta orden de menu
+        # simula opcion menu screen
+        display.fill_rect(0, StatLy, WIDTH, 8, 0)
+        display.fill_rect(0, TrdLy, WIDTH, WIDTH_VA, 0) # borra 3ra linea x21 alto
+        textobig = f"Option {option}"
+        Writer.set_textpos(display, TrdLy, 0)  
+        wri.printstring(textobig)
+        display.show()
+        # simula la vuelta de la opcion
+        while not('back' in teclas):
+            pass
+        teclas = []     
 
+# Sale del bucle principal
+alimentaSensor.off()
+motorPwm.duty_u16(0) # stop motor
+print("Parada de usuario por tecla BACK")
+display.fill_rect(0, StatLy, WIDTH, 8, 0)
+display.text('Parada x tecla B', 0, StatLy, 1)
+display.show()

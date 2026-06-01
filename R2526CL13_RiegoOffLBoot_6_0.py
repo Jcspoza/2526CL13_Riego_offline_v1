@@ -101,7 +101,7 @@ display.show()
 sensorDHT = DHT22(Pin(14))
 
 try:
-    sleep (1) # maximun sampling rate in cas eof DHT22
+    sleep(2) # maximun sampling rate in cas eof DHT22
     sensorDHT.measure() # order a measure
     temp=sensorDHT.temperature () # simple copy of last measure Temp
     hum=sensorDHT.humidity() # simple copy of last measure Humidity
