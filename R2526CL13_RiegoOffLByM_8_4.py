@@ -10,6 +10,9 @@
 # Montaje #7 : todo el HW INICIALIZADO incluido motor PWM
 # 7.1 -> 7.2 tanque a texto grueso + status salir / seguir
 # Montaje #8 : detector del tanque vacio por flotador en GPIO01
+# 8.2 entrar y salir de bucle principal
+# 8.3 visualizacion del display con funcion unica + opciones se ejecutan vacias pero Ok
+# 8.4 se eliminan comentario decodigo antiguo de display
 
 from machine import Pin, ADC, I2C, Timer,PWM
 from dht import DHT22
@@ -25,7 +28,7 @@ from os import uname
 p_ucontroler = "Pico W & Pico _"
 p_keyOhw = "Soils sesnsor on ADC0 - pata + a GPIO21 + displ SH1106 gpio4&5"
 p_project = "Riego Automatico (flotador) Inicializacion y Main - Off Line "
-p_version = "8.2"
+p_version = "8.4"
 p_library = "SH1106  @robert-hh + writer @peterhinch + dht"
 print(f"uPython version: {uname()[3]} ")
 print(f"uC: {uname()[4]} - Key other HW: {p_keyOhw}")
@@ -105,22 +108,22 @@ NotExit = True
 # Definicion de menus Acciones
 
 def showAirTH():
-    return 'showAirTH'
+    return 'DONE AirTH'
 
 def showSoilVolt():
-    return 'showSoilVolt'
+    return 'DONE SoilV'
 
 def showSoilHum():
-    return 'showSoilHum'
+    return 'DONE SoilH'
 
 def checkTank():
-    return 'checkTank'
+    return 'DONE cTank'
 
 def checkMotor():
-    return 'checkMotor'
+    return 'DONE cMoto'
 
 def doNothing():
-    return 'doNothing'
+    return 'DONE Noth'
 
 MENU = [[showAirTH, 'Air ºC Hum'],
         [showSoilVolt,'Soil Volts'],
@@ -156,16 +159,32 @@ display.fill(0)
 # 1.1.3- Crea el objeto wri para letra de mas tamaño
 wri = Writer(display, font, verbose = False) # verbose = False to suppress console output
 
-ToplineStr = f"Riego A off-v{p_version}"
-display.text(ToplineStr, 0, TopLy, 1)
-display.hline(0, TopLhy,128,1)
-display.text('OK: Disp...', 0, FstLy, 1)
-textobig = "HW Init Run"
-Writer.set_textpos(display, TrdLy, 0)  
-wri.printstring(textobig)
-display.hline(0, StatLhy,128,1)
-display.text('Booting...', 0, StatLy, 1)
-display.show()
+# 1.1.4 Funciones de Dibujo del display
+ToplineStr = f"Riego A off-v{p_version}" # No se cambiara en todo el programa
+
+def ShowDisp3LinB(l1, l2, l3b, ls, Erase = True, Show = True):
+    """ funcion generica de display """
+    if Erase:
+        display.fill(0)
+        
+    display.text(ToplineStr, 0, TopLy, 1)
+    display.hline(0, TopLhy,128,1)
+    display.fill_rect(0, FstLy, WIDTH, 8, 0)
+    display.text(l1, 0, FstLy, 1)
+    display.fill_rect(0, SndLy, WIDTH, 8, 0)
+    display.text(l2, 0, SndLy, 1)
+    
+    display.fill_rect(0, TrdLy, WIDTH, WIDTH_VA, 0) # borra 3ra linea x21 alto
+    Writer.set_textpos(display, TrdLy, 0)  
+    wri.printstring(l3b)
+    display.hline(0, StatLhy,128,1)
+    display.text(ls, 0, StatLy, 1)
+    
+    if Show:
+        display.show()
+
+# END display functions ----------------    
+ShowDisp3LinB('OK: Disp...', '', 'HW Init Run', 'Booting...')
 
 # 1.2 Creacion de pulsadores
  
@@ -193,9 +212,7 @@ re = RotaryIRQ(
     half_step=False,
     )
 
-display.fill_rect(0, FstLy, WIDTH, 8, 0)
-display.text('OK: Dis/3sw/RE', 0, FstLy, 1)
-display.show()
+ShowDisp3LinB('OK: Dis/3sw/RE', '', 'HW Init Run', 'Booting...')
 
 # 1.4 Crea el sensor DHT22 
 sensorDHT = DHT22(Pin(SENSDHT))
@@ -206,10 +223,8 @@ sensorDHT.measure() # order a measure
 temp=sensorDHT.temperature () # simple copy of last measure Temp
 hum=sensorDHT.humidity() # simple copy of last measure Humidity
 print (f"T={temp:02.2f} ºC, H={hum:02.2f} %")
-display.fill_rect(0, FstLy, WIDTH, 8, 0)
-display.text('OK:Dis/3sw/RE/TH', 0, FstLy, 1)
-display.text(f'T={temp:02.1f}C H={hum:02.1f}%', 0, SndLy, 1)
-display.show()
+
+ShowDisp3LinB('OK: Dis/3sw/RE', f'T={temp:02.1f}C H={hum:02.1f}%', 'HW Init Run', 'Booting...')
     
 # 1.5 Crea el motor bomba
 motorPwm = PWM(Pin(MOTORPIN))
@@ -238,35 +253,26 @@ alimentaSensor.off()
 
 lastsensorSoilvolt = lastsensorSoilraw * SOILVOLTCONV
 print(f"Soil volts = {lastsensorSoilvolt:.2f} voltios | Valor ADC bruto = {lastsensorSoilraw}")
-display.fill_rect(0, SndLy, WIDTH, 8, 0)
-display.text('motor/Soil/Tank', 0, SndLy, 1)
-display.show()
+
+ShowDisp3LinB('OK: Dis/3sw/RE', 'motor/Soil/Tank', 'HW Init Run', 'Booting...')
 
 if lastsensorTank :
     print("AVISO: Tanque VACIO / Tank EMPTY")
-    display.fill_rect(0, TrdLy, WIDTH, WIDTH_VA, 0) # borra 3ra linea x21 alto
-    textobig = "Tank EMPTY"
-    Writer.set_textpos(display, TrdLy, 0)  
-    wri.printstring(textobig)
-    display.show()   
-    
+    tankStatus = 'Tank EMPTY'   
 else:
     print("Tanque LLENO / Tank FULL")
-    display.fill_rect(0, TrdLy, WIDTH, WIDTH_VA, 0) # borra 3ra linea x21 alto
-    textobig = "Tank FULL"
-    Writer.set_textpos(display, TrdLy, 0)  
-    wri.printstring(textobig)
-    display.show() 
+    tankStatus = 'Tank FULL'
+
+ShowDisp3LinB('OK: Dis/3sw/RE', 'motor/Soil/Tank', tankStatus, 'Booting...')
 
 iledtim.deinit()
 sleep(1)
 iled.off()
 # ------- Fin de incializacion --------
 
-display.fill_rect(0, StatLy, WIDTH, 8, 0)
-display.text('Exit BACK/go CON', 0, StatLy, 1)
-display.show() 
+ShowDisp3LinB('OK: Dis/3sw/RE', 'motor/Soil/Tank', tankStatus, 'Exit BACK/go CON')
 
+# paso al bucle principal o salir
 while not('back' in teclas) and not('confirm' in teclas):
     pass
 
@@ -278,34 +284,26 @@ if teclas != [] and teclas[0] == 'confirm':
     NotExit = True
     teclas = []
     
-# 2- FUNCIONES 
-    
-# 3- BUCLE PRINCIPAL --> Esta sin hacer 
+
+# 3- BUCLE PRINCIPAL --> solo 1 capa de menu
 while NotExit:
     option = re.value()
-    print('Menu option = ', option, end='\r')
-    # DrawMenuScreen(option)
-    display.fill_rect(0, StatLy, WIDTH, 8, 0)
-    display.text('Go CON/Stop BACK', 0, StatLy, 1)
-    display.show()
+    optionStr = MENU[option][1] # lee la opcion del menu en texto para humanos
+    print('Menu option = ', optionStr, end='\r')
+    ShowDisp3LinB('Rotate menu', 'Go press CON but', optionStr, 'Go CON/Stop BACK')
     
     if teclas != [] and teclas[0] == 'back':
-        NotExit = False
+        NotExit = False # hace que salga del bucle principal en la siguiente vuelta
         teclas = []
-
     
     if teclas != [] and teclas[0] == 'confirm':
         teclas = []
-        print('Go Menu option = ', option)
-        # falta orden de menu
+        print('Going Menu option = ', optionStr)
         # simula opcion menu screen
-        display.fill_rect(0, StatLy, WIDTH, 8, 0)
-        display.fill_rect(0, TrdLy, WIDTH, WIDTH_VA, 0) # borra 3ra linea x21 alto
-        textobig = f"Option {option}"
-        Writer.set_textpos(display, TrdLy, 0)  
-        wri.printstring(textobig)
-        display.show()
-        # simula la vuelta de la opcion
+        orden = MENU[option][0] # las funcione sPython son objetos
+        returnOrden = orden() # ejecuta al orden correspondiente del menu
+        ShowDisp3LinB('Done Option', '', returnOrden, 'return menu BACK')
+        
         while not('back' in teclas):
             pass
         teclas = []     
@@ -314,6 +312,5 @@ while NotExit:
 alimentaSensor.off()
 motorPwm.duty_u16(0) # stop motor
 print("Parada de usuario por tecla BACK")
-display.fill_rect(0, StatLy, WIDTH, 8, 0)
-display.text('Parada x tecla B', 0, StatLy, 1)
-display.show()
+ShowDisp3LinB('See you', 'next time', 'Exit done', 'Stop by button B')
+

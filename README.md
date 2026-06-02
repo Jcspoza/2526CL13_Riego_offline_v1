@@ -34,6 +34,20 @@ En esta lección vamos a **montar todos los elementos del Proyecto de riego auto
 
 - Punto de situación: partimos de  M#5 F_2 de CL11 => DHT22 + YL69 => M#6 todo HW inicialización
 
+- M#7boot Inicialización completa + Pequeños Cambios HW
+  
+  - M#7 Pequeños Cambios del HW: alimentación del motor
+  
+  - M#7 Inicialización completa - Tanque con sensor resistivo
+
+- M#8 - Tanque con sensor flotador
+  
+  - Chequeo HW del sensor Flotador
+  
+  - M#8.1 Inicialización completa
+  
+  - M#8.2 Inicialización + primer esbozo con menu
+
 - TO DO y Notas
   
   ---
@@ -93,14 +107,15 @@ Seguramente 'writer.py' no estará.
 
 Todos los programas en microPython
 
-| Programa test                                                | Elemento HW                    | Libreria                                              | Notas                                                                        |
-| ------------------------------------------------------------ | ------------------------------ | ----------------------------------------------------- | ---------------------------------------------------------------------------- |
-| [Rbhwt_sh1106_1_0.py](Rbhwt_sh1106_1_0.py)                   | Display SH1106                 | [sh1106.py](sh1106.py)                                |                                                                              |
-|                                                              | Display + letra a eleccion     | [writer.py](writer.py) [freesans20.py](freesans20.py) | hay que incluir una fuente de letra                                          |
-| [Rbhwt_DHT22_1_1.py](Rbhwt_DHT22_1_1.py)                     | DHT22                          | 'dht' incorporada en uPy                              |                                                                              |
-| [Rbhwt_motorPWMtranNPN_1_0.py](Rbhwt_motorPWMtranNPN_1_0.py) | motor + transistor NPN por PWM | no necesaria                                          | El circuito permite alimentación a 5 o mas volt / se deben compartir tierras |
-|                                                              |                                |                                                       |                                                                              |
-|                                                              |                                |                                                       |                                                                              |
+| Programa test                                                | Elemento HW                       | Libreria                                              | Notas                                                                        |
+| ------------------------------------------------------------ | --------------------------------- | ----------------------------------------------------- | ---------------------------------------------------------------------------- |
+| [Rbhwt_sh1106_1_0.py](Rbhwt_sh1106_1_0.py)                   | Display SH1106                    | [sh1106.py](sh1106.py)                                |                                                                              |
+|                                                              | Display + letra a eleccion        | [writer.py](writer.py) [freesans20.py](freesans20.py) | hay que incluir una fuente de letra                                          |
+|                                                              |                                   |                                                       |                                                                              |
+| [Rbhwt_DHT22_1_1.py](Rbhwt_DHT22_1_1.py)                     | DHT22                             | 'dht' incorporada en uPy                              |                                                                              |
+| [Rbhwt_motorPWMtranNPN_1_0.py](Rbhwt_motorPWMtranNPN_1_0.py) | motor + transistor NPN por PWM    | no necesaria                                          | El circuito permite alimentación a 5 o mas volt / se deben compartir tierras |
+|                                                              | Sensor Humedd Suelo tipo Sparkfun |                                                       |                                                                              |
+|                                                              |                                   |                                                       |                                                                              |
 
 ### Tabla resumen de programas del Riego off line
 
@@ -269,10 +284,81 @@ Se cierra la inicialización apagando el led interno y desactivando el timer de 
 
 [R2526CL13_RiegoOffLBoot_7_1.py](R2526CL13_RiegoOffLBoot_7_1.py)
 
-### M#8 Inicialización completa - Tanque con sensor flotador
+## M#8 - Tanque con sensor flotador
 
-El sensor de flotador es equivalente a un pulsador SIN REBOTE, asi aque lo unico que hay que añadir es una resistencia de pull-up de 10K. Usaremos el GPIO01 porque al lado hay un pin a GND
+### Chequeo HW del sensor Flotador
+
+El sensor de flotador es equivalente a un pulsador SIN REBOTE, asi que lo único que hay que añadir es una resistencia de pull-up de 10K. Usaremos el GPIO01 porque al lado hay un pin a GND.
+
+Modifico la tabla de conexiones de acuerdo a estas conexiones adicionales.
+
+### M#8.1 Inicialización completa
 
 [R2526CL13_RiegoOffLBoot_8_1.py](R2526CL13_RiegoOffLBoot_8_1.py)
 
+### M#8.2 Inicialización completa + primer esbozo con menu
+
+Vamos a incluir la funcionalidad básica del menu, sin entrar en opciones . incorporamso al programa la lectura del Rotary Encoder
+
+[R2526CL13_RiegoOffLByM_8_2.py](R2526CL13_RiegoOffLByM_8_2.py)
+
+### M#8.3  y 8.4 Inicialización completa + Mejora de ejecución de Menú + uso función para visualizar
+
+En la versión 8.3 se simplifica la visualizacion del display creando una funcion que dibuja todo el display en modo 2 líneas mas la 3ra de ancho x20
+
+[R2526CL13_RiegoOffLByM_8_3.py](R2526CL13_RiegoOffLByM_8_3.py)
+
+La versión 8.4 es una versión limpia sin tantos comentarios 'guardando' codigo anterior'
+
+[R2526CL13_RiegoOffLByM_8_4.py](R2526CL13_RiegoOffLByM_8_4.py)
+
+#### Función genérica de display para el programa de riego
+
+```
+def ShowDisp3LinB(l1, l2, l3b, ls, Erase = True, Show = True):
+    """ funcion generica de display """
+    if Erase:
+        display.fill(0)
+
+    display.text(ToplineStr, 0, TopLy, 1)
+    display.hline(0, TopLhy,128,1)
+    display.fill_rect(0, FstLy, WIDTH, 8, 0)
+    display.text(l1, 0, FstLy, 1)
+    display.fill_rect(0, SndLy, WIDTH, 8, 0)
+    display.text(l2, 0, SndLy, 1)
+
+    display.fill_rect(0, TrdLy, WIDTH, WIDTH_VA, 0) # borra 3ra linea x21 alto
+    Writer.set_textpos(display, TrdLy, 0)  
+    wri.printstring(l3b)
+    display.hline(0, StatLhy,128,1)
+    display.text(ls, 0, StatLy, 1)
+
+    if Show:
+        display.show()
+```
+
+Se pueden hacer mejoras para no ejecutar los mandos de borrado por rectángulo si se ha hecho el erase por `display.fill(0)`
+
 ---- AQUI ME QUEDE ---
+
+## TO DO
+
+1. Mejora de la función genérica de display: para no ejecutar los mandos de borrado por rectángulo si se ha hecho el erase por `display.fill(0)`
+
+2. Antes de mostrar las opciones de menu, deberia hacer una visualización completa de todos los estados que son 8:
+   
+   1. Are - Temp ºC
+   
+   2. Aire Hum %
+   
+   3. Tierra - humedad %
+   
+   4. Tanke OK / NOK
+   
+   5. Motor velocidad en %
+   
+   6. Motor- periodo entre riegos
+   
+   7. Motor tiempo de riego cada vez
+   
+   8. Tipo de riego : SIN riego / PERIODIC Periódico / AUTO Función sequedad suelo

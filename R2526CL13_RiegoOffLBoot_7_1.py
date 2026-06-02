@@ -194,7 +194,7 @@ alimentaSensor = Pin(POWERSENS, Pin.OUT)
 # lee valor del sensor del Tanke y del suelo
 alimentaSensor.on()
 sleep(2)
-lastsensorTank = sensorTank.value()
+lastsensorTank = sensorTank.value() # '1' Tank Empty / '0' Tank FULL
 
 lastsensorSoilraw = sensorSoil.read_u16()
 alimentaSensor.off()
