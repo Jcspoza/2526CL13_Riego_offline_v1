@@ -191,7 +191,7 @@ sensorSoil = ADC(SOILMOISTADC)
 alimentaSensor = Pin(POWERSENS, Pin.OUT)
 
 # 1.7 Crea el sensor del tanque 
-sensorTank = Pin(TANKPIN, Pin.IN)
+sensorTank = Pin(TANKPIN, Pin.IN) # pull-up por hw : R de 10k
 
 # lee valor del sensor del Tanke y del suelo
 alimentaSensor.on()
