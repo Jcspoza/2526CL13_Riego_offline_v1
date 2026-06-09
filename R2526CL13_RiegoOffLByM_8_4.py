@@ -26,7 +26,7 @@ from rotary_irq_rp2 import RotaryIRQ
 from os import uname
 # Informative block - start
 p_ucontroler = "Pico W & Pico _"
-p_keyOhw = "Soils sesnsor on ADC0 - pata + a GPIO21 + displ SH1106 gpio4&5"
+p_keyOhw = "Soils sensor on ADC0 - pata + a GPIO21 + displ SH1106 gpio4&5"
 p_project = "Riego Automatico (flotador) Inicializacion y Main - Off Line "
 p_version = "8.4"
 p_library = "SH1106  @robert-hh + writer @peterhinch + dht"

@@ -107,29 +107,29 @@ Seguramente 'writer.py' no estará.
 
 Todos los programas en microPython
 
-| Programa test                                                | Elemento HW                       | Libreria                                              | Notas                                                                        |
-| ------------------------------------------------------------ | --------------------------------- | ----------------------------------------------------- | ---------------------------------------------------------------------------- |
-| [Rbhwt_sh1106_1_0.py](Rbhwt_sh1106_1_0.py)                   | Display SH1106                    | [sh1106.py](sh1106.py)                                |                                                                              |
-|                                                              | Display + letra a eleccion        | [writer.py](writer.py) [freesans20.py](freesans20.py) | hay que incluir una fuente de letra                                          |
-|                                                              |                                   |                                                       |                                                                              |
-| [Rbhwt_DHT22_1_1.py](Rbhwt_DHT22_1_1.py)                     | DHT22                             | 'dht' incorporada en uPy                              |                                                                              |
-| [Rbhwt_motorPWMtranNPN_1_0.py](Rbhwt_motorPWMtranNPN_1_0.py) | motor + transistor NPN por PWM    | no necesaria                                          | El circuito permite alimentación a 5 o mas volt / se deben compartir tierras |
-|                                                              | Sensor Humedd Suelo tipo Sparkfun |                                                       |                                                                              |
-|                                                              |                                   |                                                       |                                                                              |
+| Programa test                                                | Elemento HW                          | Libreria                       | Notas                                                                                                   |
+| ------------------------------------------------------------ | ------------------------------------ | ------------------------------ | ------------------------------------------------------------------------------------------------------- |
+| [Rbhwt_sh1106_1_0.py](Rbhwt_sh1106_1_0.py)                   | Display SH1106                       | [sh1106.py](sh1106.py)         |                                                                                                         |
+|                                                              | Display + letra a elección           | [writer.py](writer.py)         | hay que incluir una fuente de letra                                                                     |
+|                                                              | fuente de letra x20 de alto          | [freesans20.py](freesans20.py) |                                                                                                         |
+| [Rbhwt_DHT22_1_1.py](Rbhwt_DHT22_1_1.py)                     | DHT22                                | 'dht' incorporada en uPy       |                                                                                                         |
+| [Rbhwt_motorPWMtranNPN_1_0.py](Rbhwt_motorPWMtranNPN_1_0.py) | Motor + transistor NPN por PWM       | no necesaria                   | El circuito permite alimentación a 5 o mas volt / se deben compartir tierras                            |
+| [Rbhwt_sHumPg_4_0.py](Rbhwt_sHumPg_4_0.py)                   | Sensor Humedd Suelo tipo Sparkfun    | Calibrado                      | CALIBRACION :  Al aire = 784/ Tierra seca raw =1000/ Tierra empapada= 32000/ vaso con agua y sal =33000 |
+| [Rbhwt_YL38_69GP_1_1.py](Rbhwt_YL38_69CP_1_1.py)             | Sensor de tanque de agua YL38 / YL69 |                                |                                                                                                         |
 
 ### Tabla resumen de programas del Riego off line
 
 Todos los programas en microPython
 
-| Programa                                                         | Montaje  | HW si Robotica y Notas                                                     | Objetivo de Aprendizaje                                                               |
-| ---------------------------------------------------------------- | -------- | -------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
-| [R2526CL11_ADC_pVgDisp_5F_2.py](R2526CL11_ADC_pVgDisp_5F_2.py)   | CL11 M#5 | Elijo el control de flujo por ser mas simple, v2 con mejoras visuales      |                                                                                       |
-| [R2526CL13_RiegoOffLBoot_6_0.py](R2526CL13_RiegoOffLBoot_6_0.py) | M#6      | Display sh106 + letrta grande / DHT22 / sensor tanque por humedad resitiva | Programa ejemplo de como manejar errores en HW. No lo usaremos , suponemos todo HW OK |
-| [R2526CL13_RiegoOffLBoot_7_1.py](R2526CL13_RiegoOffLBoot_7_1.py) | M#7      | Todos los elementos HW                                                     | Inicialización completa - NO pasa a menu                                              |
-|                                                                  |          |                                                                            |                                                                                       |
-|                                                                  |          |                                                                            |                                                                                       |
-|                                                                  |          |                                                                            |                                                                                       |
-|                                                                  |          |                                                                            |                                                                                       |
+| Programa                                                         | Montaje  | HW si Robotica y Notas                                                     | Objetivo de Aprendizaje                                                                      |
+| ---------------------------------------------------------------- | -------- | -------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| [R2526CL11_ADC_pVgDisp_5F_2.py](R2526CL11_ADC_pVgDisp_5F_2.py)   | CL11 M#5 | Elijo el control de flujo por ser mas simple, v2 con mejoras visuales      |                                                                                              |
+| [R2526CL13_RiegoOffLBoot_6_0.py](R2526CL13_RiegoOffLBoot_6_0.py) | M#6      | Display sh106 + letrta grande / DHT22 / sensor tanque por humedad resitiva | Programa ejemplo de como manejar errores en HW. No lo usaremos , suponemos todo HW OK        |
+| [R2526CL13_RiegoOffLBoot_7_1.py](R2526CL13_RiegoOffLBoot_7_1.py) | M#7      | Todos los elementos HW                                                     | Inicialización completa - NO pasa a menu                                                     |
+| [R2526CL13_RiegoOffLByM_8_4.py](R2526CL13_RiegoOffLByM_8_4.py)   | M#8      | M#8 - **Tanque con sensor flotador**                                       | Version con la incicializacion completa + esbozo de bucle de menu + funcion de visualizacion |
+|                                                                  |          |                                                                            |                                                                                              |
+|                                                                  |          |                                                                            |                                                                                              |
+|                                                                  |          |                                                                            |                                                                                              |
 
 ---
 
@@ -304,7 +304,7 @@ Vamos a incluir la funcionalidad básica del menu, sin entrar en opciones . inco
 
 ### M#8.3  y 8.4 Inicialización completa + Mejora de ejecución de Menú + uso función para visualizar
 
-En la versión 8.3 se simplifica la visualizacion del display creando una funcion que dibuja todo el display en modo 2 líneas mas la 3ra de ancho x20
+En la versión 8.3 se simplifica la visualización del display creando una función que dibuja todo el display en modo 2 líneas mas la 3ra de ancho x20
 
 [R2526CL13_RiegoOffLByM_8_3.py](R2526CL13_RiegoOffLByM_8_3.py)
 
@@ -339,6 +339,69 @@ def ShowDisp3LinB(l1, l2, l3b, ls, Erase = True, Show = True):
 
 Se pueden hacer mejoras para no ejecutar los mandos de borrado por rectángulo si se ha hecho el erase por `display.fill(0)`
 
+### DIA 10 JUNIO: PRUEBAS PARALELAS ANTES DE 8.5 y 8.5
+
+En la versión 8.5 hay que incorporar varias mejoras
+
+* Calibración de sensor Humedad de Suelo
+
+* Ultimo estado de todos los parametros x8 , como tenerlo actualizado todo el tiempo = > leer con timers
+
+* Repensar el grafo de menus: Incluir en el Bucle principal la visualizacion de todos los parametros
+
+* Mejorar la visualización y ver si tarda mucho para el bucle principal
+  
+  Para probar estas mejoras, en algunos casos los haremos con programas aparte, para hacer pruebas paralelas.
+
+#### Calibración de sensor Humedad de Suelo
+
+El program de test HW es 
+
+[Rbhwt_sHumPg_4_0.py](Rbhwt_sHumPg_4_0.py)
+
+usa una funcion de mapeo tipica con limites arriba y abajo
+
+```
+SOILRAWMAX = 33000 # resultado de calibracion real, valor con agua con sal
+SOILRAWMIN = 700 # resultado de calibracion real, valor sonda al aire
+
+def readSoilhum100():
+    Soilraw = sensorSoil.read_u16()
+    if Soilraw >= SOILRAWMAX :
+        Soilraw = SOILRAWMAX
+
+    if Soilraw <= SOILRAWMIN :
+        Soilraw = SOILRAWMIN
+    # map function
+    return int((Soilraw - SOILRAWMIN) / (SOILRAWMAX - SOILRAWMIN) * 100) , Soilraw
+```
+
+#### Parámetros actualizados: leer con timer el DHT22
+
+El caso de leer con timer el DHT22 es el mas sencillo junto al del leer el tanque, porque se puede tener al sensor alimentado todo el tiempo y en la función de callback del timer simplemente leer
+
+[Rbhwt_DHT22Timer3_0.py](Rbhwt_DHT22Timer3_0.py)
+
+
+
+#### Parámetros actualizados: leer con timer el sensor de humedad de suelo
+
+El caso de leer con timer el sensor de humedad es mas complejo, porque hay que alimentar el sensor durante un tiempo minimo antes de leer, para que que la lectura sea estable. 
+
+No se  puede incluir simplemente una espera a la función callback de timer: hay que hacer la medida en 2 pasos : levantar un flag y en el bucle principal chequear al flag y medir cuando pase un periodo minimo
+
+[Rbhwt_sHumPgTim_5_0.py](Rbhwt_sHumPgTim_5_0.py)
+
+
+
+#### Mejorar Visualización y medida de tiempos - decoradores
+
+..
+
+#### Repensar grafo de menus
+
+..
+
 ---- AQUI ME QUEDE ---
 
 ## TO DO
@@ -353,7 +416,7 @@ Se pueden hacer mejoras para no ejecutar los mandos de borrado por rectángulo s
    
    3. Tierra - humedad %
    
-   4. Tanke OK / NOK
+   4. Tanque OK / NOK
    
    5. Motor velocidad en %
    
