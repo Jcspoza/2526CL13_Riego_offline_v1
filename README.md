@@ -382,8 +382,6 @@ El caso de leer con timer el DHT22 es el mas sencillo junto al del leer el tanqu
 
 [Rbhwt_DHT22Timer3_0.py](Rbhwt_DHT22Timer3_0.py)
 
-
-
 #### Parámetros actualizados: leer con timer el sensor de humedad de suelo
 
 El caso de leer con timer el sensor de humedad es mas complejo, porque hay que alimentar el sensor durante un tiempo minimo antes de leer, para que que la lectura sea estable. 
@@ -392,15 +390,15 @@ No se  puede incluir simplemente una espera a la función callback de timer: hay
 
 [Rbhwt_sHumPgTim_5_0.py](Rbhwt_sHumPgTim_5_0.py)
 
-
-
 #### Mejorar Visualización y medida de tiempos - decoradores
 
 ..
 
-#### Repensar grafo de menus
+#### Repensar grafo de menús
 
 ..
+
+![](./doc/grafScreen.png)
 
 ---- AQUI ME QUEDE ---
 
