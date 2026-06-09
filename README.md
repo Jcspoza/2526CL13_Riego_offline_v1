@@ -390,15 +390,43 @@ No se  puede incluir simplemente una espera a la función callback de timer: hay
 
 [Rbhwt_sHumPgTim_5_0.py](Rbhwt_sHumPgTim_5_0.py)
 
-#### Mejorar Visualización y medida de tiempos - decoradores
-
-..
+# 
 
 #### Repensar grafo de menús
 
-..
-
 ![](./doc/grafScreen.png)
+
+#### Mejorar Visualización y medida de tiempos - decoradores
+
+Vamos a homogeneizar pantallas de acuerdo al grafo. Lo mejore es hacer un progrma paralelo para las pantallas
+
+##### Pantalla S0
+
+Reorganizamos un poco como van apareciendo ene la inicialización y medimos tiempos 
+
+[Rtest_Screen4RiegoS0Simple2_0.py](Rtest_Screen4RiegoS0Simple2_0.py)
+
+¿Y si definimos una función show mas inteligente aunque mas compleja?
+
+[Rtest_Screen4RiegoS0Complex3_0.py](Rtest_Screen4RiegoS0Complex3_0.py)
+
+
+
+###### Digresión medida de tiempos de funciones con decoradores
+
+Python AVANZADO
+
+[Rtest_Screen4RiegoS0SimpleDeco3_0.py](Rtest_Screen4RiegoS0SimpleDeco3_0.py)
+
+
+
+##### Pantalla S1
+
+Veamos cuentos parámetros necesitamos : necesitamos 9 
+
+[Rtest_Screen4RiegoS1SimpleDeco4_0.py](Rtest_Screen4RiegoS1SimpleDeco4_0.py)
+
+
 
 ---- AQUI ME QUEDE ---
 
